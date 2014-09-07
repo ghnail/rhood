@@ -1,0 +1,47 @@
+{{ define "header" }}<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>Robin Y Hood Proxy </title>
+
+    <link rel="stylesheet" href="/static/css/pure-release-0.5.0/pure-min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/static/css/pure-release-0.5.0/grids-responsive-min.css">
+
+
+    <link rel="stylesheet" href="/static/css/rhood.css">
+
+</head>
+<body>
+<div id="header" style="">
+    <!--    <div style="width:100%;background:#E0EBF5; ">Robin Y Hood</div>-->
+    <div class="pure-menu pure-menu-open pure-menu-horizontal pure-menu-head" >
+        <ul>
+            <li><a href="/admin/cutout">Cutout</a></li>
+            <li><a href="/admin/download-request">Download</a></li>
+            <li><a href="/admin/status">Status</a></li>
+            <li><a href="/admin/about">About</a></li>
+            <li><a href="/admin/inline">Inline</a></li>
+        </ul>
+    </div>
+
+</div>
+
+
+
+
+<div id="content" >
+    <div class="main-flash-info" id="flashDiv" style="{{if .flash_message }}display:block;{{else}}display:none;{{end}}">{{ .flash_message }}</div>
+
+    <h1>{{ .page_title }}</h1>
+    <div id="page_content">
+{{end}}
+        {{ .page_content }}
+{{ define "footer" }}
+    </div>
+</div>
+</body>
+</html>
+{{ end }}

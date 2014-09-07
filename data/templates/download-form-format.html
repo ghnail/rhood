@@ -1,0 +1,24 @@
+<div id="form-div" style="">
+{{ if .is_not_available }}
+Sorry, we can't fetch this video. It can be unavailable, or may miss the MP4 format support.
+<p>
+You can also see the full log at the page <a href="/admin/status">/admin/status</a>,
+or request another video from <a href="/admin/download-request">/admin/download-request</a>
+
+{{ else }}
+
+
+<form class="pure-form pure-form-aligned"  method="post" action="/admin/download/">
+    Please, select the required video quality
+    {{range $name, $value := .downloadOptions }}
+        <label for="{{$name}}" class="pure-radio">
+            <input id="{{$name}}" type="radio" name="video_quality" value="{{$name}}"{{if $value.isChecked }} checked{{end}}>
+            {{$value.value}}
+        </label>
+    {{end}}
+    <input type="hidden" name="video_url" value="{{ .video_url}}">
+    <button type="submit" class="pure-button form-button">Download</button>
+</form>
+</div>
+
+{{ end }}

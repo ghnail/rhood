@@ -1,0 +1,3 @@
+.rsync-filter
+- cmd/rhood/rhood
+- cmd

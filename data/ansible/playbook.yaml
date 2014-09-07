@@ -1,0 +1,138 @@
+- hosts: rhood proxy
+  remote_user: ubuntu
+  vars:
+    ansible_sudo_pass: ubuntu
+    user: ubuntu
+
+
+    box_ip: "{{ ansible_default_ipv4['address'] }}"
+    gopath: /home/ubuntu/gocode/
+
+
+    dir_loc_conf: "{{ dir_loc_src }}/data/conf/"
+
+    dir_loc_src: /home/z/gocode/src/github.com/ghnail/rhood
+    dir_rem_src: "{{ gopath }}/src/github.com/ghnail/rhood"
+
+    dir_rem_virtualenv: /home/ubuntu/virtualenv/rhood-env
+    file_rem_youtube_dl_bin: "{{ dir_rem_virtualenv }}/bin/youtube-dl"
+
+
+    dir_rem_root: /home/ubuntu/rhood
+    dir_rem_bin: "{{ dir_rem_root }}/cmd/rhood/"
+    dir_rem_template: "{{ dir_rem_root }}/data/templates"
+    dir_rem_webserver: "{{ dir_rem_root }}/rhood-www"
+
+
+
+    control_box_listen_address: "{{ box_ip }}:8090"
+    control_box_public_address: "{{ box_ip }}:90"
+
+    nginx_proxy_address: "{{ box_ip }}:85"
+    goapp_proxy_port: "8081" 
+
+  roles: 
+    - role: joshualund.golang
+      go_download_location: http://golang.org/dl/{{ go_tarball }}
+      #go_download_location: http://192.168.1.189:8000/{{ go_tarball }}
+      sudo: yes
+
+  pre_tasks:
+    - name: install software
+      apt: name={{ item }} state=present
+      with_items:
+        - nginx
+        - python-pip
+        - python-virtualenv
+        - git
+        - mercurial
+        - rsync
+        - nano
+      sudo: yes
+
+    - name: install pip software
+      #pip: name={{ item }} version=2014.07.21 state=present virtualenv={{ dir_rem_virtualenv }} virtualenv_command=virtualenv
+      pip: name={{ item }} state=present virtualenv={{ dir_rem_virtualenv }} virtualenv_command=virtualenv
+      with_items:
+         - youtube-dl
+
+  tasks:
+
+# on the local machine (192.168.1.189) with project in '/home/z/gocode/src/github.com/ghnail/rhood' run command
+# git daemon --verbose --base-path=/home/z/gocode/src/github.com/ghnail --export-all /home/z/gocode/src/github.com/ghnail/rhood
+
+    - name: sync sources
+      git: repo=https://github.com/ghnail/rhood dest={{ dir_rem_src }}
+      # see prev comment about how to host local git repo
+      #git: repo=git://192.168.1.189/rhood dest={{ dir_rem_src }}
+      notify:
+       - build go app
+       - restart nginx
+       - restart drhood
+       - create delivery dirs
+       - update delivery dirs
+
+    - name: copy rhood config
+      template: src={{ dir_loc_conf }}/rhood.conf.tpl dest={{ dir_rem_src }}/cmd/rhood/rhood.conf mode=0644
+
+    - name: copy daemon config
+      template: src={{ dir_loc_conf }}/drhood.conf.tpl dest=/etc/init/drhood.conf
+      sudo: yes
+      notify:
+        - restart drhood
+
+    - name: copy nginx config
+      template: src={{ dir_loc_conf }}/nginx.conf.tpl dest=/etc/nginx/nginx.conf
+      sudo: yes
+      notify:
+        - restart nginx
+
+
+  handlers:
+    - name: build go app
+      shell: >
+        export GOPATH={{ gopath }};
+        cd {{ gopath }}/src/github.com/ghnail/rhood/cmd/rhood ;
+        /usr/local/go/bin/go get ../../... ;
+        /usr/local/go/bin/go clean ;
+        /usr/local/go/bin/go build ;
+
+    - name: create delivery dirs
+      file: path={{ item }} recurse=yes state=directory mode=0774
+      with_items:
+        - "{{ dir_rem_root }}"
+        - "{{ dir_rem_webserver }}"
+        - "{{ dir_rem_template }}"
+        - "{{ dir_rem_bin }}"
+
+    - name: update delivery dirs
+      synchronize: src={{ item.local }} dest={{ item.remote }}
+      with_items:
+        - {local: "{{ dir_loc_src }}/rhood-www/*", remote: "{{ dir_rem_webserver }}"}
+        - {local: "{{ dir_loc_src }}/data/templates/*", remote: "{{ dir_rem_template }}"}
+      notify:
+        - del binary
+        - copy binary
+        - chown of delivery directory
+
+    - name: del binary
+      #command: mv {{ dir_rem_bin }}/{{ item }} {{ dir_rem_bin }}/{{ item }}_old
+      command: rm -f {{ dir_rem_bin }}/{{ item }}
+      with_items:
+        - rhood
+        - rhood.conf
+    - name: copy binary
+      command: cp  {{ dir_rem_src }}/cmd/rhood/{{ item }} {{ dir_rem_bin }}/{{ item }}
+      with_items:
+        - rhood
+        - rhood.conf
+    - name: chown of delivery directory
+      file: dest={{ dir_rem_root }} state=directory recurse=yes owner=ubuntu group=www-data
+      sudo: yes
+
+    - name: restart nginx
+      service: name=nginx state=restarted
+      sudo: yes
+    - name: restart drhood
+      service: name=drhood state=restarted
+      sudo: yes

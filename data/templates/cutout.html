@@ -1,0 +1,31 @@
+{{ template "header" . }}
+<div>
+        <form class="pure-form pure-form-aligned" action="/admin/cutout" method="post">
+            {{if .flash_error }}
+            <div class="form-flash-error">Submit error. Please, try again.</div>
+            {{end}}
+            Proxy status
+
+
+            <label for="option-three" class="pure-radio">
+                <input id="option-three" type="radio" name="proxyState" value="cutout_cache"{{if .cutout_cache}} checked{{end}}>
+                Cache the video
+                </input>
+            </label>
+
+            <label for="option-two" class="pure-radio">
+                <input id="option-two" type="radio" name="proxyState" value="cutout_pass"{{if .cutout_pass}} checked{{end}}>
+                Don't change Youtube pages
+            </label>
+
+
+            <label for="option-four" class="pure-radio">
+                <input id="option-four" type="radio" name="proxyState" value="cutout_all_off"{{if .cutout_all_off}} checked{{end}}>
+                Disable Youtube at all
+            </label>
+
+            <button type="submit" class="form-button pure-button">Set</button>
+        </form>
+</div>
+{{ template "footer" }}
+

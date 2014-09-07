@@ -1,0 +1,26 @@
+{{ template "header" . }}
+
+
+<div>
+    <h2>Download status</h2>
+    <pre id="downloadStatus" class="download-status-div">{{.download_status}}</pre>
+
+    <h2>Full log</h2>
+    <pre id="logArea" class="log-area-div">{{.initial_log_messages}}</pre>
+</div>
+
+<div>
+    <form method="POST" action="/admin/status">
+        <input type="hidden" name="cancel_task" value="cancel_task">
+        <button type="submit" class="pure-button form-button">Cancel task</button>
+    </form>
+
+</div>
+
+<script type="text/javascript">
+    var globalControlBoxPublicAddress = '{{.control_box_public_address}}';
+</script>
+<script type="text/javascript" src="/static/js/vendor/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="/static/js/log-refresh.js"></script>
+
+{{ template "footer" }}

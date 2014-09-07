@@ -1,0 +1,8 @@
+*.iml
+.idea
+.idea/**
+rhood-www/static/cache/video/*.mp4
+rhood-www/static/cache/html/*.html
+temp.txt
+
+cmd/rhood/rhood

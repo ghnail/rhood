@@ -1,0 +1,52 @@
+{{ template "header" . }}
+<div>
+    <h2>Description</h2>
+    This is a 'Robin Y Hood' caching proxy for Youtube.
+
+    If the Youtube page was opened via this proxy, you can save the video with the new button 'cache the video'.
+    The next time you visit this page, the video will be played from the local server,
+    which is really good in a case of slow Internet line.
+    <p>
+    The other good thing is the HTML page is saved too; even if the video was deleted from the Youtube server, you can still open it
+    from the LAN storage with the old URL.
+    <p>
+    Pay attention: HTTPS connections are not supported, use the HTTP version of Youtube.
+    <p>
+    And the last bad thing: if youtube_dl is failed to download *.mp4 version of video, it can't be cached by this app at all.
+    But most of the videos are still available.
+
+    <h2>Usage</h2>
+    This server can be used in a two ways. First one: you can set it as an HTTP proxy, and every Youtube page will be affected by it.
+    Or you can use it as a regular HTTP LAN service, managing videos urls by yourself.
+
+    <a id="proxy"><h3>1. Proxy</h3></a>
+    The entire application is a proxy (default port is 8081 for production, or 2000 for the development).
+    It's even better to start Nginx to optimize proxy requests, and the default port for this is 85.
+
+    If you set this box/port as your HTTP proxy, and all Youtube pages will be updated with available cache data.
+
+    <a id="service"><h3>2. Service</h3></a>
+
+    The proxy web interface can be used as a standalone cache service.
+
+    For example, you have proxy network box
+    <pre>10.0.3.130</pre>
+    and Youtube video address
+    <pre>http://www.youtube.com/watch?v=UU5wFUqoBbk</pre>
+
+    Now you can replace it with
+    <pre>http://10.0.3.130:8090/watch?v=UU5wFUqoBbk</pre>
+    or
+    <pre>http://10.0.3.130:8090/youtube/watch?v=UU5wFUqoBbk</pre>
+
+    and get all caching options.
+    In the case of nginx proxy for static files, you can use port 90 instead of 8090.
+
+    <p>
+    When you are using 'service-style' version, no session data is sent to the Youtube.
+    This will result a nasty 'select yout language' popup on the each page (and the saved ones too). Be prepared for this.
+
+</div>
+
+
+{{ template "footer" }}

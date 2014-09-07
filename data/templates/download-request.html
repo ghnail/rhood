@@ -1,0 +1,24 @@
+{{ template "header" . }}
+<div>All http (not https!) Youtube pages have a new button: 'cache the video'.
+    You can press it on the video of your choice,
+    or, the same thing, add prefix |cache server|/admin/download/|youtube link|,
+    for example,
+    <pre>10.0.3.130:8090/admin/download/http://www.youtube.com/watch?v=UU5wFUqoBbk</pre>
+    You can also post a link right here in the text box.
+
+
+        <div id="form-div-download" style="">
+
+        <form class="pure-form pure-form-aligned" method="post" action="/admin/download-request" >
+            <label for="youtube_link" class="pure-radio">
+                Download the video from address
+                <input type="url" id="youtube_link" name="youtube_link" style="width:100%" required="required">
+
+            </label>
+
+            <button type="submit" class="pure-button form-button">Request download</button>
+        </form>
+    </div>
+
+</div>
+{{ template "footer" }}

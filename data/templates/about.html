@@ -1,0 +1,69 @@
+{{ template "header" . }}
+<div><h2>Description</h2>
+This is a 'Robin Y Hood' proxy for Youtube. If you set it as your HTTP proxy, then
+the Youtube videos will have an option to cache the data. For more information, please refer to the <a href="/">title page</a>
+</div>
+<div><h2>Credits</h2>
+There are a few software tools are used for this proxy:
+    <ul>
+        <li><a href="http://rg3.github.io/youtube-dl/">youtube-dl</a> The Python program, which is able to retrieve video data from Youtube</li>
+        <li><a href="http://golang.org/">Go programming language</a> fast and nice programming language</li>
+        <li><a href="https://github.com/elazarl/goproxy/">go proxy</a> proxy server, written on the Golang</li>
+        <li><a href="http://www.gorillatoolkit.org/">Gorilla</a> Golang web toolkit. The mux and websocket pachages are used</li>
+        <li><a href="https://github.com/stretchr/testify">Testify</a> mainly for assertion library</li>
+        <li><a href="http://github.com/vaughan0/go-ini">go-ini</a> to read the *.ini config files</li>
+        <li><a href="https://github.com/golang/groupcache">groupcache</a> for the implementation of the LRU-cache</li>
+        <li><a href="https://github.com/op/go-logging">go-logging</a> as a log library</li>
+
+    </ul>
+
+
+Frontend uses libraries:
+    <ul><li><a href="http://www.videojs.com/">Video.js</a> a video player to make use of saved video files</li>
+        <li><a href="http://jquery.com/">jQuery</a> no need to introduce this one</li>
+        <li><a href="http://purecss.io//">Pure</a> css framework</li>
+        <li><a href="http://golang.org/">Go programming language</a> color scheme from this site</li>
+    </ul>
+</div>
+<div><h2>Application variables</h2>
+        <table class="pure-table pure-table-bordered">
+            <thead>
+            <tr>
+                <td>#</td>
+                <td>Variable name</td>
+                <td>Variable value</td>
+            </tr>
+
+
+            </thead>
+            <tbody>
+                {{$options := .config_options}}
+                {{$oddity := .oddity}}
+
+                {{range $i, $name := .counter }}
+                <tr {{if (index $oddity $name)}}class="pure-table-odd"{{end}}>
+                    <td>{{$i}}</td>
+                    <td>{{$name}}</td>
+                    <td>{{index $options $name}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+
+
+        </table>
+</div>
+
+
+<div><h2>Known bugs</h2>
+    <ul>
+        <li>if something is searched while the video is playing, it will continue playing in background until another video is opened</li>
+        <li>video start time URL is not supported, all videos are started at 0</li>
+        <li>service-style (not proxy-style) caching will add 'select your language' dialog to all pages</li>
+        <li>some videos can not be downloaded (the ones that are not supported by youtube_dl and the ones without *.mp4 version)</li>
+        <li>video is only played via flash player; only *.mp4 videos are supported</li>
+        <li>video player is replaced, and all annotations and subtitles are vanished</li>
+        <li>no auth for the admin page, so anyone can request really big video download, and anyone can use cutout option.</li>
+    </ul>
+</div>
+
+{{ template "footer" }}
