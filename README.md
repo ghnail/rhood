@@ -1,15 +1,16 @@
 # 1. Description:
+
 This is proxy server for Youtube. It extends all video pages with a new button to cache the data:
 
-[Cache button](docs/img/cache-button.png?raw=true)
+[Cache button](/docs/img/cache-button.png?raw=true)
 
 When you press it, the new dialog will appear to select quality of the video to download.
 
-[Download options](docs/img/cache-button.png?raw=true)
+[Download options](/docs/img/cache-button.png?raw=true)
 
 And the next time you visit this page, you will get video traffic from the local server:
 
-[Cached video](docs/img/cached-video.png?raw=true)
+[Cached video](/docs/img/cached-video.png?raw=true)
 
 It will appear as a green text "Video is cached", and you also will have the different video player.
 
