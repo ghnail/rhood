@@ -6,7 +6,7 @@ This is proxy server for Youtube. It extends all video pages with a new button t
 
 When you press it, the new dialog will appear to select quality of the video to download.
 
-[![Download options](https://raw.githubusercontent.com/ghnail/rhood/master/doc/img/cache-button.png)]
+[![Download options](https://raw.githubusercontent.com/ghnail/rhood/master/doc/img/download-options.png)]
 
 And the next time you visit this page, you will get video traffic from the local server:
 
