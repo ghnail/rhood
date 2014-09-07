@@ -33,14 +33,14 @@ func initLogging() bool {
 //=============================================================================
 
 func logDebug(format string, args ...interface{}) {
-	log.Debug(format, args)
+	log.Debug(format, args...)
 }
 
 func logInfo(format string, args ...interface{}) {
-	log.Info(format, args)
+	log.Info(format, args...)
 }
 func logErr(format string, args ...interface{}) {
-	log.Error(format, args)
+	log.Error(format, args...)
 }
 
 func println(a ...interface{}) {
