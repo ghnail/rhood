@@ -26,15 +26,17 @@
 
 
     control_box_listen_address: "{{ box_ip }}:8090"
-    control_box_public_address: "{{ box_ip }}:90"
+    #control_box_public_address: "{{ box_ip }}:90"
+    # Problems with nginx-websocket, so using the raw golang address
+    control_box_public_address: "{{ box_ip }}:8090"
 
     nginx_proxy_address: "{{ box_ip }}:85"
     goapp_proxy_port: "8081" 
 
   roles: 
     - role: joshualund.golang
-      go_download_location: http://golang.org/dl/{{ go_tarball }}
-      #go_download_location: http://192.168.1.189:8000/{{ go_tarball }}
+      #go_download_location: http://golang.org/dl/{{ go_tarball }}
+      go_download_location: http://192.168.1.189:8000/{{ go_tarball }}
       sudo: yes
 
   pre_tasks:
@@ -62,9 +64,9 @@
 # git daemon --verbose --base-path=/home/z/gocode/src/github.com/ghnail --export-all /home/z/gocode/src/github.com/ghnail/rhood
 
     - name: sync sources
-      git: repo=https://github.com/ghnail/rhood dest={{ dir_rem_src }}
+      #git: repo=https://github.com/ghnail/rhood dest={{ dir_rem_src }}
       # see prev comment about how to host local git repo
-      #git: repo=git://192.168.1.189/rhood dest={{ dir_rem_src }}
+      git: repo=git://192.168.1.189/rhood dest={{ dir_rem_src }}
       notify:
        - build go app
        - restart nginx
@@ -126,8 +128,9 @@
       with_items:
         - rhood
         - rhood.conf
+    # force=yes for chown: because www-data may download something in this dir on previous launch.
     - name: chown of delivery directory
-      file: dest={{ dir_rem_root }} state=directory recurse=yes owner=ubuntu group=www-data
+      file: dest={{ dir_rem_root }} state=directory recurse=yes owner=ubuntu group=www-data force=yes
       sudo: yes
 
     - name: restart nginx

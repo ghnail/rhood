@@ -27,6 +27,7 @@ http {
         listen {{ control_box_public_address }};
 
         # websocket section
+        # Actually not used for now, handshake is not occurred for unknown reason.
         location /admin/ws {
             proxy_pass http://{{ control_box_listen_address }};
             proxy_http_version 1.1;
