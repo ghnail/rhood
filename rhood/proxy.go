@@ -128,6 +128,12 @@ func preventYoutubeAjax(html string, controlBoxPublicAddressHttp string) string 
 	return html
 }
 
+func logNetworkParams() {
+	logInfo("Proxy port:\t\t\t\t" + GetConfVal("goappProxyPort"))
+	logInfo("Admin address:\t\t\t" + GetConfVal("controlBoxListenAddress"))
+	logInfo("Admin public address:\t" + GetConfVal("controlBoxPublicAddress"))
+}
+
 func Proxy() {
 	var youtubeRegex = "^(www\\.)?youtube.com"
 
@@ -227,6 +233,9 @@ func Proxy() {
 	proxy.Verbose = true
 
 	globalproxy = proxy
+
+	logNetworkParams()
+
 
 	log.Fatal(http.ListenAndServe(":"+goappProxyPort, proxy))
 }
