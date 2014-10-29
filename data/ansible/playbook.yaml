@@ -26,9 +26,10 @@
 
 
     control_box_listen_address: "{{ box_ip }}:8090"
-    #control_box_public_address: "{{ box_ip }}:90"
-    # Problems with nginx-websocket, so using the raw golang address
-    control_box_public_address: "{{ box_ip }}:8090"
+    control_box_public_address: "{{ box_ip }}:90"
+    # Workaround: must be same as control_box_public_address, but
+    # nginx can't handle websocket request for unknown reason.
+    control_box_public_address_websocket: "{{ control_box_listen_address }}"
 
     nginx_proxy_address: "{{ box_ip }}:85"
     goapp_proxy_port: "8081" 

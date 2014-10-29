@@ -6,6 +6,7 @@ controlBoxListenAddress={{ control_box_listen_address }}
 
 # 192.168.1.189
 controlBoxPublicAddress={{ control_box_public_address }}
+controlBoxPublicAddressWebsocket={{ control_box_public_address_websocket }}
 
 goappProxyPort={{ goapp_proxy_port }}
 

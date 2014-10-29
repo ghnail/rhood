@@ -36,6 +36,7 @@ func getConfigDefaultValues() map[string]string {
 		"controlBoxListenAddress": "0.0.0.0:2000",
 		//"controlBoxPublicAddress": "192.168.1.189:2000",
 		"controlBoxPublicAddress": "localhost:2000",
+		"controlBoxPublicAddressWebsocket": "localhost:2000",
 		"goappProxyPort":          "8081",
 
 		//		"dirStatic": "/home/venv/v1/www/flask/rhood_youtube/static",

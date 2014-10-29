@@ -128,6 +128,7 @@ func statusActionGorillaRoute(w http.ResponseWriter, r *http.Request) {
 	params["initial_log_messages"] = strings.Join(logMessages, "\n")
 	params["download_status"] = lastDownloadState
 	params["control_box_public_address"] = GetConfVal("controlBoxPublicAddress")
+	params["control_box_public_address_websocket"] = GetConfVal("controlBoxPublicAddressWebsocket")
 
 	execTemplate(w, "status.html", params)
 }
