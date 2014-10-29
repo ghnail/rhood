@@ -276,7 +276,10 @@ func RunGorillaMux() {
 	r.HandleFunc("/admin/download-request", downloadRequestActionGorillaRoute).Methods("POST", "GET")
 	r.HandleFunc(DOWNLOAD_PAGE_PREFIX+"{url:.*}", downloadActionGorillaRoute).Methods("POST", "GET")
 
+	// Watch youtube videos via urls like 'localhost:2000/watch?v=UU5wFUqoBbk
 	r.HandleFunc("/watch", proxiedActionGorillaRoute).Methods("GET")
+	// Enable youtube search for the prev comment situation
+	r.HandleFunc("/results", proxiedActionGorillaRoute).Methods("GET")
 
 	r.HandleFunc("/youtube/{url:.*}", func(w http.ResponseWriter, r *http.Request) {
 		youtubeUrl := strings.Replace(r.RequestURI, "/youtube/", "/", -1)
