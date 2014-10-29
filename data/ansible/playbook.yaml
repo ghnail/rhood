@@ -101,7 +101,7 @@
         /usr/local/go/bin/go build ;
 
     - name: create delivery dirs
-      file: path={{ item }} recurse=yes state=directory mode=0774
+      file: path={{ item }} state=directory mode=0774
       with_items:
         - "{{ dir_rem_root }}"
         - "{{ dir_rem_webserver }}"
