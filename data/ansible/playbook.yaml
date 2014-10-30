@@ -36,8 +36,8 @@
 
   roles: 
     - role: joshualund.golang
-      #go_download_location: http://golang.org/dl/{{ go_tarball }}
-      go_download_location: http://192.168.1.189:8000/{{ go_tarball }}
+      go_download_location: http://golang.org/dl/{{ go_tarball }}
+      #go_download_location: http://192.168.1.189:8000/{{ go_tarball }}
       sudo: yes
 
   pre_tasks:
