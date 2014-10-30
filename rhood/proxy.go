@@ -37,6 +37,15 @@ func getVideoTag(videoUrl string) string {
 	return video
 }
 
+// We can cut out the entire original player div while replacing it with
+// the LAN player. This will 100% stop it, but will also raise JS
+// exception, therefore comments will be unavailable.
+// Or we can hide this div and corrupt the html5player http link,
+// so it will be unable to play; but if another player is used,
+// it will be hidden and still playing/requesting external data.
+
+var isDisabledEntirePlayerDiv = false;
+
 func videoFromLan(html string, videoId string, cacheBoxHttpAddress string) string {
 	// 1. Replace video player tag
 
@@ -44,8 +53,24 @@ func videoFromLan(html string, videoId string, cacheBoxHttpAddress string) strin
 
 	videoTag := getVideoTag(mp4Url)
 
-	html = regexp.MustCompile(`(?s)<div id="player-mole-container.*<div class="clear"`).
+	if (isDisabledEntirePlayerDiv) {
+		html = regexp.MustCompile(`(?s)<div id="player-mole-container.*<div class="clear"`).
 		ReplaceAllString(html, videoTag+`<div class="clear"`)
+	} else {
+		// Can't simple remove #player-api, without it comments are not loaded.
+		// JS catches NPE, and doesn't reach comments part.
+		// But, with removed reference to video player, this div doesn't do anythin bad.
+		html = regexp.MustCompile(`html5player`).
+			ReplaceAllString(html, "replaced-stub-for-html-5-player")
+
+		// Embed the new player
+		html = regexp.MustCompile(`<div class="clear"`).
+			ReplaceAllString(html, videoTag+`<div class="clear"`)
+
+		html = regexp.MustCompile(`(<div id="player-api")([^>]*)(></div>)`).
+			ReplaceAllString(html, `$1$2 style="display:none"$3`)
+	}
+
 
 	// 2. Add scripts/styles to support player
 	playerHeader := `
