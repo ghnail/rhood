@@ -56,13 +56,13 @@ Frontend uses libraries:
 
 <div><h2>Known bugs</h2>
     <ul>
-        <li>if something is searched while the video is playing, it will continue playing in background until another video is opened</li>
-        <li>video start time URL is not supported, all videos are started at 0</li>
-        <li>service-style (not proxy-style) caching will add 'select your language' dialog to all pages</li>
-        <li>some videos can not be downloaded (the ones that are not supported by youtube_dl and the ones without *.mp4 version)</li>
-        <li>video is only played via flash player; only *.mp4 videos are supported</li>
-        <li>video player is replaced, and all annotations and subtitles are vanished</li>
-        <li>no auth for the admin page, so anyone can request really big video download, and anyone can use cutout option.</li>
+        <li>Youtube search doesn't stop the video, only hides it. If it was playing, you will hear it sound until another video is opened.</li>
+        <li>Every video starts from beginning. The start-from-time URL argument is not supported.</li>
+        <li>Service-style (not proxy-style) caching will add 'select your language' dialog to all pages</li>
+        <li>Some videos can not be downloaded. The ones that are not supported by youtube_dl, and the ones without *.mp4 version</li>
+        <li>Video is only played via flash player; only *.mp4 videos are supported</li>
+        <li>Video player is replaced, and all annotations and subtitles are vanished</li>
+        <li>No auth for the admin page, so anyone can request really big video download, and anyone can use cutout option.</li>
     </ul>
 </div>
 

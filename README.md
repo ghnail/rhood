@@ -1,36 +1,40 @@
+Robin Y Hood proxy
+
 # 1. Description:
 
-This is proxy server for Youtube. It extends all video pages with a new button to cache the data:
+This is proxy server for Youtube. It adds to all video pages a new button to cache the data:
 
 ![Cache button](https://raw.githubusercontent.com/ghnail/rhood/master/doc/img/cache-button.png)
 
-When you press it, the new dialog will appear to select quality of the video to download.
+When you press it, the new dialog will appear to select video quality.
 
 ![Download options](https://raw.githubusercontent.com/ghnail/rhood/master/doc/img/download-options.png)
 
-And the next time you visit this page, you will get video traffic from the local server:
+And the next time you visit video page, you will get media traffic from the local server:
 
 ![Cached video](https://raw.githubusercontent.com/ghnail/rhood/master/doc/img/cached-video.png)
 
-It will appear as a green text "Video is cached", and you also will have the different video player.
+The video player is changed, and we see a green text: "Video is cached".
 
 # 2. How it works
 
-There is a program, youtube-dl, which can download Youtube video to local file.
-Now it can be played without internet connection, which is great.
+Sometimes (hello, slow networks!) it may be nice to work with a regular youtube
+interface (http address, user comments, playlists, recommendations), but with a
+video downloaded from the LAN server.
 
-But it's also good to see video info, comments and all other youtube stuff, so here is an idea:
-we download video, and the next time user touch same video page, we replace link to remote video
-with the link to our LAN server.
+The first idea: cache the media data on Squid. But it doesn't work.
+Youtube has complicated player, which works with a lot of video chunks instead of single video file.
+And each of them can have dynamic name for the same content, so Squid can't handle them.
 
-Youtube has complicated player, which works with a lot of video chunks instead of single video file,
-and that is why it's not that easy to cache the media. Because of that we need to replace the entire player
-to use a video from LAN. We use videoJs for this purpose.
+But there is a program, youtube-dl, which can download Youtube video to local file.
+Now it can be played with any offline media player, like VLC or mplayer.
+We can also save it on server, and feed browser with it.
 
-The big minus of this replacement is that we lose all features of youtube player, like annotations or subtitles.
+Original Youtube player can't request LAN server, so we need to replace
+it with another software, in this app it is VideoJS.
 
-As a final word, the application has two main parts: the proxy server (which modifies youtube pages), and the admin
-interface, which downloads/hosts video files (and also has few pages for settings).
+The main disadvantage is that we have lost annotations and subtitles,
+but for the most of videos it's not that huge loss.
 
 # 3. How to build
 
@@ -52,13 +56,13 @@ The shell command:
 go version
 ```
 
-must result something like:
+must output something like:
 > go version go1.3 linux/amd64
 
-## 3.2. CVS
+## 3.2. VCS
 
-The go code requires git for the most of projects, but it's also good to see mercurial in
-the system for the bitbucket/google.code libraries. Rsync is required for deployment tasks,
+The go code requires git for the most of projects, but it's also good to see mercurial
+in the system for the bitbucket/google.code libraries. Rsync is required for deployment tasks,
 so it's optional dependency.
 ```bash
 sudo apt-get install git mercurial rsync
@@ -68,7 +72,7 @@ Now the call:
 ```bash
 git --version
 ```
-will return something like that:
+will say something like that:
 > git version 1.8.1.2
 
 ## 3.3. Youtube-dl
@@ -89,7 +93,7 @@ source /home/venv/rhood/bin/activate
 pip install -I youtube_dl==2014.09.04.3
 ```
 
-The command
+The request
 ```bash
 /home/venv/rhood/bin/youtube-dl --version
 ```
@@ -141,21 +145,10 @@ If everything work fine, you can use proxy localhost:8081, and open direct youtu
 
 http://www.youtube.com/watch?v=UU5wFUqoBbk
 
-You can also edit file
-rhood/conf.go, and replace line
-
-`"controlBoxPublicAddress": "localhost:2000",`
-
-with your IP address:
-
-`"controlBoxPublicAddress": "192.168.1.189:2000",`
-
-And try it from your LAN.
-
 ## 3.6. Ansible delivery
 
 You may want to deploy application on the separate box. You can build application,
-copy binary, templates, configs and web static files to the box, and configure Nginx
+copy binary, templates and web static files to the box, and configure Nginx
 by yourself. But it can be done automatically with Ansible scripting.
 
 The script will prepare environment, get github sources, build the application,
@@ -220,13 +213,12 @@ You can use proxy in two versions: nginx-optimized proxy with port 85, or use th
 
 The Intellij IDEA has a good unofficial plugin for the Go language, and it has a nice quality.
 
-# 5. Brief description
+# 5. Brief structure description
 
-The main code parts are:
+The main application parts are:
 
 - youtube_dl, the python program to download videos from youtube
 - Go application itself (proxy server + admin pages)
-- app config (ports and fs paths)
 - html templates (they are in the separate dir, and not embedded in the app)
 - satic files (js, css, videojs, jquery) and downloaded html pages/video files
 

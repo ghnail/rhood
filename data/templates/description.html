@@ -3,27 +3,29 @@
     <h2>Description</h2>
     This is a 'Robin Y Hood' caching proxy for Youtube.
 
-    If the Youtube page was opened via this proxy, you can save the video with the new button 'cache the video'.
+    If the Youtube page was opened via this proxy, you can save the video with the new button 'Cache the video'.
     The next time you visit this page, the video will be played from the local server,
     which is really good in a case of slow Internet line.
     <p>
-    The other good thing is the HTML page is saved too; even if the video was deleted from the Youtube server, you can still open it
-    from the LAN storage with the old URL.
+    The other good thing is the saved HTML page; even if the video was deleted from the Youtube server, you can still open it
+    with the old URL. Description (HTML), as the video (MP4), will be taken from the LAN server.
     <p>
-    Pay attention: HTTPS connections are not supported, use the HTTP version of Youtube.
+    <blockquote>Pay attention: HTTPS connections are not supported, use the HTTP version of Youtube.</blockquote>
     <p>
     And the last bad thing: if youtube_dl is failed to download *.mp4 version of video, it can't be cached by this app at all.
     But most of the videos are still available.
 
     <h2>Usage</h2>
-    This server can be used in a two ways. First one: you can set it as an HTTP proxy, and every Youtube page will be affected by it.
-    Or you can use it as a regular HTTP LAN service, managing videos urls by yourself.
+    This server can be used in a two ways. First, you can set it as an HTTP proxy, and every Youtube page you visit
+    will be affected by it.
+    Or you can use it as a regular HTTP LAN service. You visit |serever-addr|/youtube/watch?|ID|,
+    and it shows appropriate Youtube page, modified by the app.
 
     <a id="proxy"><h3>1. Proxy</h3></a>
     The entire application is a proxy (default port is 8081 for production, or 2000 for the development).
     It's even better to start Nginx to optimize proxy requests, and the default port for this is 85.
 
-    If you set this box/port as your HTTP proxy, and all Youtube pages will be updated with available cache data.
+    If you set it as your HTTP proxy, then all Youtube pages will be updated with available cache data.
 
     <a id="service"><h3>2. Service</h3></a>
 
@@ -40,7 +42,7 @@
     <pre>http://10.0.3.130:8090/youtube/watch?v=UU5wFUqoBbk</pre>
 
     and get all caching options.
-    In the case of nginx proxy for static files, you can use port 90 instead of 8090.
+    In the case of nginx proxy for static files, you can use port 85 instead of 8090.
 
     <p>
     When you are using 'service-style' version, no session data is sent to the Youtube.
