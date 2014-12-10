@@ -40,7 +40,7 @@ func LoadConfig() {
 	var goappProxyBindAddress = flag.String("bind-proxy", "0.0.0.0:8081", "bind address of proxy service")
 	var controlBoxBindAddress = flag.String("bind-web", "0.0.0.0:2000", "bind address of web interface and file server")
 	var controlBoxPublicAddress = flag.String("public-address", "localhost:2000", "from where web browser will request cached videos")
-	var controlBoxPublicAddressWebsocket = flag.String("public-address-ws", "localhost:2000", "websocket addressto access admin streamin interface")
+	var controlBoxPublicAddressWebsocket = flag.String("public-address-ws", "localhost:2000", "websocket address to access admin streaming interface")
 
 	flag.Parse()
 

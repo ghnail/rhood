@@ -154,10 +154,10 @@ func preventYoutubeAjax(html string, controlBoxPublicAddressHttp string) string 
 }
 
 func logProxyApplicationParameters() {
-	logInfo("Root dir:\t\t\t\t\t" + GetConfVal("dirRoot"))
-	logInfo("Proxy port:\t\t\t\t" + GetConfVal("goappProxyBindAddress"))
-	logInfo("Admin address:\t\t\t" + GetConfVal("controlBoxBindAddress"))
-	logInfo("Admin public address:\t\t" + GetConfVal("controlBoxPublicAddress"))
+	logInfo("Root dir:\t\t\t\t" + GetConfVal("dirRoot"))
+	logInfo("Proxy bind address:\t\t\t" + GetConfVal("goappProxyBindAddress"))
+	logInfo("Web bind address:\t\t\t" + GetConfVal("controlBoxBindAddress"))
+	logInfo("Public address of fileserver:\t\t" + GetConfVal("controlBoxPublicAddress"))
 }
 
 func Proxy() {
