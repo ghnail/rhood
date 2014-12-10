@@ -97,7 +97,7 @@ func getRootDir() string {
 		// Compiled version. the running binary file is <root>/cmd/rhood/rhood
 		// so we need to go 2 levels up
 		binaryDir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
-		rootDir, _ = filepath.Abs(binaryDir + "../../")
+		rootDir, _ = filepath.Abs(binaryDir + "/../../")
 		isRootDir = testIfRHoodRootDir(rootDir)
 	}
 
@@ -110,7 +110,7 @@ func getRootDir() string {
 		// Test if development environment. The base file is <root>/rhood/conf.go
 		// and we need go one level up.
 		thisSourceFileDir := getCurrentFileDir()
-		rootDir,_ = filepath.Abs(thisSourceFileDir + "../")
+		rootDir,_ = filepath.Abs(thisSourceFileDir + "/../")
 		isRootDir = testIfRHoodRootDir(rootDir)
 	}
 

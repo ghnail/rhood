@@ -127,12 +127,10 @@
       command: rm -f {{ dir_rem_bin }}/{{ item }}
       with_items:
         - rhood
-        - rhood.conf
     - name: copy binary
       command: cp  {{ dir_rem_src }}/cmd/rhood/{{ item }} {{ dir_rem_bin }}/{{ item }}
       with_items:
         - rhood
-        - rhood.conf
     # force=yes for chown: because www-data may download something in this dir on previous launch.
     - name: chown of delivery directory
       file: dest={{ dir_rem_root }} state=directory recurse=yes owner=ubuntu group=www-data force=yes
