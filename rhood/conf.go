@@ -37,7 +37,7 @@ func LoadConfig() {
 	//	_conf := make(map[string]string)
 	//
 	var youtubeDownloader = flag.String("youtube-dl", "/home/venv/rhood/bin/youtube-dl", "path to youtube-dl executable file")
-	var goappProxyBindAddress = flag.String("bind-proxy", "localhost:8081", "bind address of proxy service")
+	var goappProxyBindAddress = flag.String("bind-proxy", "0.0.0.0:8081", "bind address of proxy service")
 	var controlBoxBindAddress = flag.String("bind-web", "0.0.0.0:2000", "bind address of web interface and file server")
 	var controlBoxPublicAddress = flag.String("public-address", "localhost:2000", "from where web browser will request cached videos")
 	var controlBoxPublicAddressWebsocket = flag.String("public-address-ws", "localhost:2000", "websocket addressto access admin streamin interface")
