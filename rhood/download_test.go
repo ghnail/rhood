@@ -40,7 +40,7 @@ func TestAsyncExecCancel(t *testing.T) {
 }
 
 func TestIntDownloadStartAndCancel(t *testing.T) {
-
+	loadTestConfig()
 	go StartDownloadService()
 	go func() {
 		time.Sleep(1 * time.Second)
@@ -76,6 +76,9 @@ Message to UI: [youtube] Setting language
 }
 
 func TestVideoFormatHtmlFormRender(t *testing.T) {
+	// we need dirTemplate conf argument
+	loadTestConfig()
+
 	//	map[18:map[isChecked:true format:mp4 value:640x360] 22:map[format:mp4 value:1280x720    (best)]]
 	selects := make(map[string]map[string]string)
 	selects["18"] = map[string]string{"isChecked": "true", "format": "mp4", "value": "640x360"}

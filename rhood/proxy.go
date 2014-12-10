@@ -153,10 +153,11 @@ func preventYoutubeAjax(html string, controlBoxPublicAddressHttp string) string 
 	return html
 }
 
-func logNetworkParams() {
-	logInfo("Proxy port:\t\t\t\t" + GetConfVal("goappProxyPort"))
-	logInfo("Admin address:\t\t\t" + GetConfVal("controlBoxListenAddress"))
-	logInfo("Admin public address:\t" + GetConfVal("controlBoxPublicAddress"))
+func logProxyApplicationParameters() {
+	logInfo("Root dir:\t\t\t\t\t" + GetConfVal("dirRoot"))
+	logInfo("Proxy port:\t\t\t\t" + GetConfVal("goappProxyBindAddress"))
+	logInfo("Admin address:\t\t\t" + GetConfVal("controlBoxBindAddress"))
+	logInfo("Admin public address:\t\t" + GetConfVal("controlBoxPublicAddress"))
 }
 
 func Proxy() {
@@ -196,7 +197,7 @@ func Proxy() {
 			}
 
 			// 2. Cache initial, not-updated version of the page.
-			// We need video pages only, do not save nothing else.
+			// We need video pages only, do not save anything else.
 			if videoId != "" {
 				globalCacheHtmlPage.Put(reqUrl.String(), sOriginal)
 			}
@@ -253,14 +254,14 @@ func Proxy() {
 
 	logInfo("Ready to start")
 
-	goappProxyPort := GetConfVal("goappProxyPort")
+	goappProxyBindAddress := GetConfVal("goappProxyBindAddress")
 
 	proxy.Verbose = true
 
 	globalproxy = proxy
 
-	logNetworkParams()
+	logProxyApplicationParameters()
 
 
-	log.Fatal(http.ListenAndServe(":"+goappProxyPort, proxy))
+	logFatal(http.ListenAndServe(goappProxyBindAddress, proxy).Error())
 }

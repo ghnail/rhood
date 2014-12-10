@@ -15,6 +15,15 @@ import (
 
 var log *logging.Logger
 var format = "%{color}%{time:15:04:05} ▶ %{level:.4s} %{id:03x}%{color:reset} %{message}"
+//var format = "%{color}%{time:15:04:05} %{level:.4s} %{id:03x}%{color:reset} %{shortfile} ▶  %{message}"
+// If you want to log the 'file:line' info too, use prev format line.
+// But you will have to replace two calls of 'backend.Log' in the github.com/op/go-logging/logger.go file.
+// Replace
+// l.backend.Log(lvl, 2, record)
+// with
+// l.backend.Log(lvl, 3, record)
+//
+// Same for defaultBackend.Log(lvl, 2, record)
 
 var _ = initLogging()
 
@@ -43,12 +52,18 @@ func logErr(format string, args ...interface{}) {
 	log.Error(format, args...)
 }
 
+func logFatal(format string, args ...interface{}) {
+	message := fmt.Sprintf(format, args)
+	log.Fatal(message)
+}
+
 func println(a ...interface{}) {
 	//	_, file, line, _ := runtime.Caller(1)
 	//	fmt.Printf("(%s:%d) %s\n", file, line, a)
 	runtime.Caller(1)
 	fmt.Println(a)
 }
+
 
 //=============================================================================
 //							Other methods

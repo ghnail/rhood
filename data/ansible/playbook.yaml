@@ -32,7 +32,7 @@
     control_box_public_address_websocket: "{{ control_box_listen_address }}"
 
     nginx_proxy_address: "{{ box_ip }}:85"
-    goapp_proxy_port: "8081" 
+    goapp_proxy_bind_address: "0.0.0.0:8081"
 
   roles: 
     - role: joshualund.golang
@@ -74,9 +74,6 @@
        - restart drhood
        - create delivery dirs
        - update delivery dirs
-
-    - name: copy rhood config
-      template: src={{ dir_loc_conf }}/rhood.conf.tpl dest={{ dir_rem_src }}/cmd/rhood/rhood.conf mode=0644
 
     - name: copy daemon config
       template: src={{ dir_loc_conf }}/drhood.conf.tpl dest=/etc/init/drhood.conf

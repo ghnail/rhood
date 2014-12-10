@@ -165,11 +165,12 @@ func descriptionActionGorillaRoute(w http.ResponseWriter, r *http.Request) {
 
 func aboutActionGorillaRoute(w http.ResponseWriter, r *http.Request) {
 	params := make(map[string]interface{})
-	params["config_options"] = _conf
+	confValues := GetFullConfMap()
+	params["config_options"] = confValues
 	params["page_title"] = "About"
 
-	params["counter"] = createCounterObject(_conf)
-	params["oddity"] = oddityMap(createCounterObject(_conf))
+	params["counter"] = createCounterObject(confValues)
+	params["oddity"] = oddityMap(createCounterObject(confValues))
 
 	execTemplate(w, "about.html", params)
 }
@@ -258,7 +259,7 @@ func (handler *DoubleSlashWorkaroundInterceptHandler) ServeHTTP(writer http.Resp
 
 func RunGorillaMux() {
 	dirStatic := GetConfVal("dirStatic")
-	controlBoxListenAddress := GetConfVal("controlBoxListenAddress")
+	controlBoxBindAddress := GetConfVal("controlBoxBindAddress")
 
 	r := mux.NewRouter()
 	r.StrictSlash(true)
@@ -298,7 +299,7 @@ func RunGorillaMux() {
 
 	initTemplates()
 
-	http.ListenAndServe(controlBoxListenAddress, &DoubleSlashWorkaroundInterceptHandler{r})
+	http.ListenAndServe(controlBoxBindAddress, &DoubleSlashWorkaroundInterceptHandler{r})
 }
 
 type Counter struct {
@@ -313,15 +314,7 @@ func NextIsOdd(counter Counter) bool {
 }
 
 func initTemplates() {
-	var odd_row = func(isOdd bool) bool {
-		isOdd = !isOdd
-		return isOdd
-	}
-
 	globalTemplatesAll = template.Must(template.New("").
-		Funcs(template.FuncMap{"odd_row": odd_row}).
-		Funcs(template.FuncMap{"NewCounter": NewCounter}).
-		Funcs(template.FuncMap{"NextIsOdd": NextIsOdd}).
 		ParseGlob(GetConfVal("dirTemplates") + "/*.html"))
 
 	return
