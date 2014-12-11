@@ -36,7 +36,67 @@ it with another software, in this app it is VideoJS.
 The main disadvantage is that we have lost annotations and subtitles,
 but for the most of videos it's not that huge loss.
 
-# 3. How to build
+# 3 Install
+
+You can download the distribution, use Docker image, or build
+the app by yourself.
+
+## 3.1. Distribution
+
+The downloader requires Python installed on your system.
+If it's missing, please, install it.
+
+```bash
+sudi apt-get install python
+```
+
+
+Then you can download the last *.zip file from the Releases tab
+(for example, https://github.com/ghnail/rhood/releases/tag/0.02 ),
+unzip it and launch ./run.sh script. Be careful, you must be in
+the rhood root directory; the script is not path-independent for now.
+
+Visit http://localhost:8090 to see, if the page is opened.
+If it's OK, you can visit some video
+
+http://localhost:8090/youtube/watch?v=UU5wFUqoBbk
+
+Or set up the HTTP proxy localhost:8081,
+and bisit
+
+http://youtube.com/watch?v=UU5wFUqoBbk
+
+## 3.2. Docker setup
+
+It's possible to run the app from the Docker container.
+
+First of all, install the Docker: https://docs.docker.com/installation/ubuntulinux/
+
+```bash
+sudo apt-get install docker-io
+```
+
+Now pull the app image
+```bash
+docker pull ghnail/rhood_proxy
+```
+
+Prepare the directory, where the videos will be saved
+
+```bash
+mkdir -p /var/rhood_proxy/cache
+```
+
+And launch the container
+
+```bash
+docker run -it -p 8090:8090 -p 8081:8081 -v /var/rhood_proxy/cache:/data/rhood/cache ghnail/rhood_proxy
+```
+The proxy is 8081, the web interface address is 8090.
+
+To test it with the actions from section 3.1.
+
+# 4. How to build
 
 You need a number of software tools:
 - golang environment
@@ -47,7 +107,7 @@ and if you want to set up separate box:
 - lxc
 - ansible
 
-## 3.1. Golang
+## 4.1. Golang
 
 We need golang 1.3. Follow the official docs [https://golang.org/doc/install](https://golang.org/doc/install) to install it.
 
@@ -59,7 +119,7 @@ go version
 must output something like:
 > go version go1.3 linux/amd64
 
-## 3.2. VCS
+## 4.2. VCS
 
 The go code requires git for the most of projects, but it's also good to see mercurial
 in the system for the bitbucket/google.code libraries. Rsync is required for deployment tasks,
@@ -75,7 +135,7 @@ git --version
 will say something like that:
 > git version 1.8.1.2
 
-## 3.3. Youtube-dl
+## 4.3. Youtube-dl
 
 The best way is to use virtualenv+pip.
 
@@ -102,7 +162,7 @@ must result something like that:
 
 > 2014.09.04.3
 
-## 3.4. Build the app
+## 4.4. Build the app
 Download the project
 
 ```bash
@@ -131,7 +191,7 @@ cd rhood
 go test -v
 ```
 
-## 3.5. Test the app
+## 4.5. Test the app
 
 Open admin page
 
@@ -145,7 +205,7 @@ If everything work fine, you can use proxy localhost:8081, and open direct youtu
 
 http://www.youtube.com/watch?v=UU5wFUqoBbk
 
-## 3.6. Ansible delivery
+## 4.6. Ansible delivery
 
 You may want to deploy application on the separate box. You can build application,
 copy binary, templates and web static files to the box, and configure Nginx
@@ -157,13 +217,13 @@ and configure daemon launch with the Nginx support.
 In this section we will setup LXC container as a server box, and run ansible to do all
 other stuff.
 
-### 3.6.1. Install software
+### 4.6.1. Install software
 
 ```bash
 sudo apt-get install lxc lxc-templates
 sudo apt-get install ansible
 ```
-### 3.6.2. Prepare the box
+### 4.6.2. Prepare the box
 
 ```bash
 sudo lxc-create -n rhoodbox -t ubuntu
@@ -209,11 +269,11 @@ Now visit `http://$RHOOD_BOX_IP:90` and see the admin page.
 
 You can use proxy in two versions: nginx-optimized proxy with port 85, or use the 'raw' go application on the port 8081.
 
-# 4. IDE setup
+# 5. IDE setup
 
 The Intellij IDEA has a good unofficial plugin for the Go language, and it has a nice quality.
 
-# 5. Brief structure description
+# 6. Brief structure description
 
 The main application parts are:
 
@@ -222,7 +282,7 @@ The main application parts are:
 - html templates (they are in the separate dir, and not embedded in the app)
 - satic files (js, css, videojs, jquery) and downloaded html pages/video files
 
-For produuction there are few additional things:
+For production there are few additional things:
 
 - upstart script to launch/log app as daemon
 - nginx as second proxy to serve static files
