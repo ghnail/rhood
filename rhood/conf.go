@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"flag"
 	"net"
+	"strings"
 )
 
 var globalproxy *goproxy.ProxyHttpServer
@@ -36,7 +37,7 @@ func GetConfVal(name string) string {
 func LoadConfig() {
 	//	_conf := make(map[string]string)
 	//
-	var youtubeDownloader = flag.String("youtube-dl", "/home/venv/rhood/bin/youtube-dl", "path to youtube-dl executable file")
+	var youtubeDownloader = flag.String("youtube-dl", "/home/venv/rhood/bin/youtube-dl", "path to youtube-dl executable file. You can use __APP_ROOT_ for the application root path")
 	var goappProxyBindAddress = flag.String("bind-proxy", "0.0.0.0:8081", "bind address of proxy service")
 	var controlBoxBindAddress = flag.String("bind-web", "0.0.0.0:2000", "bind address of web interface and file server")
 	var controlBoxPublicAddress = flag.String("public-address", "localhost:2000", "from where web browser will request cached videos")
@@ -45,6 +46,9 @@ func LoadConfig() {
 	flag.Parse()
 
 	dirRoot := getRootDir()
+
+	youtubeDownloaderUpdated := strings.Replace(*youtubeDownloader, "__APP_ROOT__", dirRoot, -1)
+	youtubeDownloader = &youtubeDownloaderUpdated
 
 	conf := map[string]string{
 		"youtubeDownloader":       *youtubeDownloader,
