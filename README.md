@@ -43,28 +43,24 @@ the app by yourself.
 
 ## 3.1. Distribution
 
-The downloader requires Python installed on your system.
+The video downloader requires Python installed on your system.
 If it's missing, please, install it.
 
 ```bash
-sudi apt-get install python
+sudo apt-get install python
 ```
 
 
-Then you can download the last *.zip file from the Releases tab
+Then you can download the latest *.zip file from the Releases tab
 (for example, https://github.com/ghnail/rhood/releases/tag/0.02 ),
-unzip it and launch ./run.sh script. Be careful, you must be in
+unzip it and launch `./run.sh` script. Be careful, you must be in
 the rhood root directory; the script is not path-independent for now.
 
 Visit http://localhost:8090 to see, if the page is opened.
-If it's OK, you can visit some video
-
-http://localhost:8090/youtube/watch?v=UU5wFUqoBbk
+If it's OK, you can visit some video: http://localhost:8090/youtube/watch?v=UU5wFUqoBbk
 
 Or set up the HTTP proxy localhost:8081,
-and bisit
-
-http://youtube.com/watch?v=UU5wFUqoBbk
+and visit Youtube by a direct link: http://youtube.com/watch?v=UU5wFUqoBbk
 
 ## 3.2. Docker setup
 
@@ -81,7 +77,7 @@ Now pull the app image
 docker pull ghnail/rhood_proxy
 ```
 
-Prepare the directory, where the videos will be saved
+Prepare the directory to store the video files
 
 ```bash
 mkdir -p /var/rhood_proxy/cache
@@ -92,18 +88,20 @@ And launch the container
 ```bash
 docker run -it -p 8090:8090 -p 8081:8081 -v /var/rhood_proxy/cache:/data/rhood/cache ghnail/rhood_proxy
 ```
-The proxy is 8081, the web interface address is 8090.
+The proxy port is 8081, the web interface address is localhost:8090.
 
-To test it with the actions from section 3.1.
+You can perform actions from section 3.1 to test it.
 
 # 4. How to build
+
+You can also build the app from sources.
 
 You need a number of software tools:
 - golang environment
 - git
 - youtube-dl
 
-and if you want to set up separate box:
+and if you want to set up a separate box with a proxy:
 - lxc
 - ansible
 
