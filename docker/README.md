@@ -9,4 +9,8 @@ Proxy server to save Youtube videos, https://github.com/ghnail/rhood
 
 If the video save dir is /var/rhood
 
+mkdir -p /var/rhood/video
+
+mkdir -p /var/rhood/html
+
 docker run -it -p 8090:8090 -p 8081:8081 -v /var/rhood:/data/rhood/cache ghnail/rhood
