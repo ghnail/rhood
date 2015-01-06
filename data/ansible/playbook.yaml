@@ -21,6 +21,7 @@
     dir_rem_root: /home/ubuntu/rhood
     dir_rem_bin: "{{ dir_rem_root }}/cmd/rhood/"
     dir_rem_template: "{{ dir_rem_root }}/data/templates"
+    dir_rem_youtube_dl: "{{ dir_rem_root }}/data/youtube-dl"
     dir_rem_webserver: "{{ dir_rem_root }}/rhood-www"
 
 
@@ -116,6 +117,7 @@
       with_items:
         - {local: "{{ dir_rem_src }}/rhood-www/", remote: "{{ dir_rem_webserver }}"}
         - {local: "{{ dir_rem_src }}/data/templates/", remote: "{{ dir_rem_template }}"}
+        - {local: "{{ dir_rem_src }}/data/youtube-dl/", remote: "{{ dir_rem_youtube_dl }}"}
 
       notify:
         - del binary
