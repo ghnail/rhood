@@ -69,8 +69,8 @@ func TestFileHash(t *testing.T) {
 	assert.Equal(t, expected, res)
 }
 
-func TestFirst(t *testing.T) {
-	//	t.Skip("Test requires Internet connection")
+func TestYoutubeDlDownloading(t *testing.T) {
+		t.Skip("Test requires Internet connection")
 	//	ch := make(chan string,1000)
 	ch := make(chan string)
 
