@@ -22,28 +22,38 @@ type DownloadRequest struct {
 }
 
 var newFilesToDownloadChan = make(chan DownloadRequest)
+var serviceRequestChan = make(chan string)
 var cancelCurrentDownloadChan = make(chan string)
 
 // TODO: download status: active/finished
 // TODO: file to URL
 
 func StartDownloadService() {
+	downloadYoutubeDLIfRequiredWithConsoleOutput(GetConfVal("youtubeDownloader"))
 	downloadLoop()
 }
 
+func RequestUpdateYoutubeDl() {
+	go requestUpdateYoutubeDlInternal()
+}
+
 func RequestDownload(url string) {
-	go requestDownload(url, "")
+	go requestDownloadInternal(url, "")
 }
 
 func RequestDownloadWithQuality(url string, quality string) {
-	go requestDownload(url, quality)
+	go requestDownloadInternal(url, quality)
 }
 
 func CancelCurrentDownload() {
 	go cancelCurrentDownload()
 }
 
-func requestDownload(url string, quality string) {
+func requestUpdateYoutubeDlInternal() {
+	serviceRequestChan <- "update-youtube-dl"
+}
+
+func requestDownloadInternal(url string, quality string) {
 	req := DownloadRequest{URL: url, Quality: quality}
 	newFilesToDownloadChan <- req
 }
@@ -53,8 +63,14 @@ func cancelCurrentDownload() {
 }
 
 func downloadLoop() {
-	for url := range newFilesToDownloadChan {
-		doDownloadActual(url)
+	for {
+		select {
+		case url := <- newFilesToDownloadChan:
+			doDownloadActual(url)
+			break
+		case serviceRequest := <- serviceRequestChan:
+			doService(serviceRequest)
+		}
 	}
 }
 
@@ -165,6 +181,17 @@ func FilterString(s []string, fn func(string) bool) []string {
 	return p
 }
 
+//=============================================================================
+//					Service methods
+//=============================================================================
+
+func doService(serviceRequest string) {
+	if serviceRequest == "update-youtube-dl" {
+		updateYoutubeDl(GetConfVal("youtubeDownloader"))
+	} else {
+		logErr("Unknown service request %s", serviceRequest)
+	}
+}
 //=============================================================================
 //						Download data from server
 //=============================================================================

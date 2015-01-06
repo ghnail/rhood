@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"flag"
 	"net"
-	"strings"
 )
 
 var globalproxy *goproxy.ProxyHttpServer
@@ -37,7 +36,6 @@ func GetConfVal(name string) string {
 func LoadConfig() {
 	//	_conf := make(map[string]string)
 	//
-	var youtubeDownloader = flag.String("youtube-dl", "/home/venv/rhood/bin/youtube-dl", "path to youtube-dl executable file. You can use __APP_ROOT_ for the application root path")
 	var goappProxyBindAddress = flag.String("bind-proxy", "0.0.0.0:8081", "bind address of proxy service")
 	var controlBoxBindAddress = flag.String("bind-web", "0.0.0.0:2000", "bind address of web interface and file server")
 	var controlBoxPublicAddress = flag.String("public-address", "localhost:2000", "from where web browser will request cached videos")
@@ -47,11 +45,8 @@ func LoadConfig() {
 
 	dirRoot := getRootDir()
 
-	youtubeDownloaderUpdated := strings.Replace(*youtubeDownloader, "__APP_ROOT__", dirRoot, -1)
-	youtubeDownloader = &youtubeDownloaderUpdated
 
 	conf := map[string]string{
-		"youtubeDownloader":       *youtubeDownloader,
 		"controlBoxBindAddress": *controlBoxBindAddress,
 		//"controlBoxPublicAddress": "192.168.1.189:2000",
 		"controlBoxPublicAddress": *controlBoxPublicAddress,
@@ -130,7 +125,7 @@ func getRootDir() string {
 
 func updateConfig(conf map[string]string) {
 	updateProxyPort(conf)
-	updateDirs(conf)
+	updateRelativePath(conf)
 }
 
 func updateProxyPort(conf map[string]string) {
@@ -147,11 +142,13 @@ func updateProxyPort(conf map[string]string) {
 }
 
 
-func updateDirs(conf map[string]string) {
+func updateRelativePath(conf map[string]string) {
 	dirRoot := conf["dirRoot"]
 	dirStatic := dirRoot + "/rhood-www/static"
 //	dirStatic := "/home/venv/v1/www/flask/rhood_youtube/static/"
 
+
+	conf["youtubeDownloader"] = dirRoot + "/data/youtube-dl/youtube-dl"
 	conf["dirStatic"] = dirStatic
 
 	conf["dirStoreHtml"] = dirStatic + "/cache/html/"

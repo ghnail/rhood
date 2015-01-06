@@ -46,7 +46,7 @@ func TestIntDownloadStartAndCancel(t *testing.T) {
 		time.Sleep(1 * time.Second)
 
 		logDebug("Download is requested")
-		requestDownload("http://youtube.com/watch?v=cuq_y8Ugf5g", "")
+		requestDownloadInternal("http://youtube.com/watch?v=cuq_y8Ugf5g", "")
 		//		newFilesToDownloadChan <- "http://youtube.com/watch?v=5-2ThFddglk"
 
 		logDebug("Message is sent")

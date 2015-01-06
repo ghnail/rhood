@@ -95,6 +95,9 @@ func downloadRequestActionGorillaRoute(w http.ResponseWriter, r *http.Request) {
 }
 
 func execTemplate(w http.ResponseWriter, templateName string, params interface{}) {
+	// Development mode, do not restart server to reload template
+//	initTemplates()
+
 	if err := globalTemplatesAll.ExecuteTemplate(w, templateName, params); err != nil {
 		logErr("Template error: " + err.Error())
 	}
@@ -239,6 +242,12 @@ func downloadActionGorillaRoute(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func updateYoutubeDlActionGorillaRoute(w http.ResponseWriter, r *http.Request) {
+	params := make(map[string] interface{})
+	RequestUpdateYoutubeDl()
+	execTemplate(w, "update-youtube-dl.html", params)
+}
+
 const DOWNLOAD_PAGE_PREFIX = "/admin/download/"
 
 type DoubleSlashWorkaroundInterceptHandler struct{ router *mux.Router }
@@ -276,6 +285,8 @@ func RunGorillaMux() {
 
 	r.HandleFunc("/admin/download-request", downloadRequestActionGorillaRoute).Methods("POST", "GET")
 	r.HandleFunc(DOWNLOAD_PAGE_PREFIX+"{url:.*}", downloadActionGorillaRoute).Methods("POST", "GET")
+
+	r.HandleFunc("/admin/update-youtube-dl", updateYoutubeDlActionGorillaRoute).Methods("POST")
 
 	// Watch youtube videos via urls like 'localhost:2000/watch?v=UU5wFUqoBbk
 	r.HandleFunc("/watch", proxiedActionGorillaRoute).Methods("GET")

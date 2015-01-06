@@ -66,4 +66,16 @@ Frontend uses libraries:
     </ul>
 </div>
 
+        <div>
+            <h2>Youtube-dl update</h2>
+            Youtube alters it settings from time to time, so the youtube-dl
+            must be updated to support these changes.
+            <p>
+            If there are problems fetching videos from Youtube, perhaps
+            some of them can be fixed by performing the update.
+            <form action="/admin/update-youtube-dl" method="post">
+                <button type="submit" class="form-button pure-button">Update youtube-dl</button>
+            </form>
+        </div>
+
 {{ template "footer" }}
