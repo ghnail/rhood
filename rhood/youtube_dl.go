@@ -154,7 +154,7 @@ func downloadYoutubeDLIfRequiredWithConsoleOutput(youtubeDlFile string) error {
 		var isLogging bool
 		for c := range ch {
 			// Normally this message is not interesting
-			isLogging = c != "Finish. youtube-dl is in place"
+			isLogging = c != "Finish. youtube-dl is in place."
 
 			if isLogging {
 				logDebug("Youtube-dl downloading progress: " + strings.Replace(c, "%", "%%", -1))
@@ -182,7 +182,7 @@ func downloadYoutubeDLIfRequired(youtubeDlFile string, progressChan chan string)
 		return downloadYoutubeDl(youtubeDlFile, progressChan)
 	} else {
 		go func() {
-			progressChan <- "Finish. youtube-dl is in place"
+			progressChan <- "Finish. youtube-dl is in place."
 		}()
 
 	}
