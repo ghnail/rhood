@@ -19,7 +19,7 @@ ENV PUBLIC_ADDRESS localhost:8090
 ENV PUBLIC_ADDRESS_WS ${PUBLIC_ADDRESS}
 
 # Build-only variables
-ENV APP_ZIP_URL https://github.com/ghnail/rhood/releases/download/0.03/rhood.zip
+ENV APP_ZIP_URL https://github.com/ghnail/rhood/releases/download/0.030/rhood.zip
 
 #VOLUME ["/data/rhood/cache"]
 
