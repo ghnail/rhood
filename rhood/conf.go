@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"path/filepath"
+	"fmt"
 )
 
 var globalproxy *goproxy.ProxyHttpServer
@@ -54,6 +55,7 @@ func LoadConfig() {
 	}
 
 	updateConfig(conf)
+	createDataDirsIfRequired(conf)
 
 	_conf = conf
 }
@@ -70,6 +72,7 @@ func loadTestConfig() {
 	}
 
 	updateConfig(conf)
+	createDataDirsIfRequired(conf)
 
 	_conf = conf
 }
@@ -153,5 +156,17 @@ func updateRelativePath(conf map[string]string) {
 	conf["dirStoreVideo"] = dirStatic + "/cache/video/"
 
 	conf["dirTemplates"] = dirRoot + "/data/templates/"
+}
 
+func createDataDirsIfRequired(conf map[string]string) {
+	dirs := []string{"dirStoreHtml", "dirStoreVideo", "youtubeDownloaderDir"}
+	for _, dirConfName := range(dirs) {
+		dir := conf[dirConfName]
+		err := os.MkdirAll(dir, 0774)
+
+		if err != nil {
+			msg := fmt.Sprintf("Can't create dir %s. Error: %s", dir, err.Error())
+			panic(msg)
+		}
+	}
 }
