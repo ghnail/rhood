@@ -1,15 +1,14 @@
 package rhood
 
 import (
-	"testing"
-	"io/ioutil"
-	"os"
-	"time"
-	"strings"
 	"bytes"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"os"
+	"strings"
+	"testing"
+	"time"
 )
-
 
 func TestCopyWithProgress(t *testing.T) {
 	// 1. Prepare
@@ -22,8 +21,8 @@ func TestCopyWithProgress(t *testing.T) {
 
 	go func() {
 		for c := range ch {
-//			println(c)
-			if strings.Contains(c, "100.00%") || strings.HasPrefix(c, "Error:"){
+			//			println(c)
+			if strings.Contains(c, "100.00%") || strings.HasPrefix(c, "Error:") {
 
 				break
 			}
@@ -31,9 +30,7 @@ func TestCopyWithProgress(t *testing.T) {
 
 		chFinish <- "done"
 
-	} ()
-
-
+	}()
 
 	// 2. Do the work
 	err := copyWithProgressBar(&w, r, int64(len(content)), ch)
@@ -47,18 +44,17 @@ func TestCopyWithProgress(t *testing.T) {
 	case <-chFinish:
 		// all is OK
 		break
-	case <- time.After(100 * time.Millisecond):
+	case <-time.After(100 * time.Millisecond):
 		assert.Fail(t, "Copying is not finished in time")
 	}
 }
 
-
 func TestFileHash(t *testing.T) {
 	// 1. Prepare
-	f,_ := ioutil.TempFile(".", "hash-test")
+	f, _ := ioutil.TempFile(".", "hash-test")
 
-	defer func(){
-		f.Close();
+	defer func() {
+		f.Close()
 		os.Remove(f.Name())
 	}()
 
@@ -66,8 +62,7 @@ func TestFileHash(t *testing.T) {
 	f.Close()
 
 	// 2. Do the work
-	res,_ := fileHash(f.Name())
-
+	res, _ := fileHash(f.Name())
 
 	// 3. Assert
 	expected := "64fbe68343d374df7e7e588b1754271eb2134367fb12d96720a7d7ed1a3fb596"
@@ -75,22 +70,20 @@ func TestFileHash(t *testing.T) {
 }
 
 func TestFirst(t *testing.T) {
-//	t.Skip("Test requires Internet connection")
-//	ch := make(chan string,1000)
+	//	t.Skip("Test requires Internet connection")
+	//	ch := make(chan string,1000)
 	ch := make(chan string)
 
 	file, _ := ioutil.TempFile(".", "test-youtube-dl")
 	file.Close()
 	tmpName := file.Name()
 
-
 	defer func() {
 		file.Close()
 		os.Remove(tmpName)
 	}()
 
-
-	err := downloadYoutubeDl(tmpName, ch);
+	err := downloadYoutubeDl(tmpName, ch)
 
 	assert.Nil(t, err)
 
@@ -98,6 +91,5 @@ func TestFirst(t *testing.T) {
 
 	// Or use hash value
 	assert.Equal(t, 723782, stat.Size())
-
 
 }

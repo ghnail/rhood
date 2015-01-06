@@ -1,12 +1,12 @@
 package rhood
 
 import (
+	"flag"
 	"github.com/elazarl/goproxy"
 	"html/template"
+	"net"
 	"os"
 	"path/filepath"
-	"flag"
-	"net"
 )
 
 var globalproxy *goproxy.ProxyHttpServer
@@ -22,16 +22,14 @@ var globalTemplatesAll = template.New("")
 // Values for tests, the app will override them by calling LoadConfig
 var _conf = map[string]string{}
 
-
 // For tests/app info; normally you should use GetConfVal instead.
-func GetFullConfMap() map[string] string {
-	return _conf;
+func GetFullConfMap() map[string]string {
+	return _conf
 }
 
 func GetConfVal(name string) string {
 	return _conf[name]
 }
-
 
 func LoadConfig() {
 	//	_conf := make(map[string]string)
@@ -45,13 +43,12 @@ func LoadConfig() {
 
 	dirRoot := getRootDir()
 
-
 	conf := map[string]string{
 		"controlBoxBindAddress": *controlBoxBindAddress,
 		//"controlBoxPublicAddress": "192.168.1.189:2000",
-		"controlBoxPublicAddress": *controlBoxPublicAddress,
+		"controlBoxPublicAddress":          *controlBoxPublicAddress,
 		"controlBoxPublicAddressWebsocket": *controlBoxPublicAddressWebsocket,
-		"goappProxyBindAddress":          *goappProxyBindAddress,
+		"goappProxyBindAddress":            *goappProxyBindAddress,
 
 		"dirRoot": dirRoot,
 	}
@@ -63,11 +60,11 @@ func LoadConfig() {
 
 func loadTestConfig() {
 	conf := map[string]string{
-		"youtubeDownloader":       "/home/venv/rhood/bin/youtube-dl",
-		"controlBoxBindAddress": "0.0.0.0:2000",
-		"controlBoxPublicAddress": "localhost:2000",
+		"youtubeDownloader":                "/home/venv/rhood/bin/youtube-dl",
+		"controlBoxBindAddress":            "0.0.0.0:2000",
+		"controlBoxPublicAddress":          "localhost:2000",
 		"controlBoxPublicAddressWebsocket": "192.168.1.189:2000",
-		"goappProxyBindAddress":          "0.0.0.0:8081",
+		"goappProxyBindAddress":            "0.0.0.0:8081",
 
 		"dirRoot": getRootDir(),
 	}
@@ -92,7 +89,7 @@ func getRootDir() string {
 	// 1. Look for root, referencing from running binary.
 
 	// 'if' for the code similarity
-	if (!isRootDir) {
+	if !isRootDir {
 		// Compiled version. the running binary file is <root>/cmd/rhood/rhood
 		// so we need to go 2 levels up
 		binaryDir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
@@ -100,28 +97,29 @@ func getRootDir() string {
 		isRootDir = testIfRHoodRootDir(rootDir)
 	}
 
-	if (!isRootDir) {invalidRootDirs += rootDir}
-
-
+	if !isRootDir {
+		invalidRootDirs += rootDir
+	}
 
 	// 2. Look for root, referencing from the source code file.
-	if (!isRootDir) {
+	if !isRootDir {
 		// Test if development environment. The base file is <root>/rhood/conf.go
 		// and we need go one level up.
 		thisSourceFileDir := getCurrentFileDir()
-		rootDir,_ = filepath.Abs(thisSourceFileDir + "/../")
+		rootDir, _ = filepath.Abs(thisSourceFileDir + "/../")
 		isRootDir = testIfRHoodRootDir(rootDir)
 	}
 
-	if (!isRootDir) {invalidRootDirs += ":" + rootDir}
+	if !isRootDir {
+		invalidRootDirs += ":" + rootDir
+	}
 
-	if (!isRootDir) {
+	if !isRootDir {
 		logFatal("Can't find root dir. It must contain 'data/templates' folder. Tested dirs are: %s", invalidRootDirs)
 	}
 
 	return rootDir
 }
-
 
 func updateConfig(conf map[string]string) {
 	updateProxyPort(conf)
@@ -131,22 +129,18 @@ func updateConfig(conf map[string]string) {
 func updateProxyPort(conf map[string]string) {
 	proxyAddress := conf["goappProxyBindAddress"]
 
-
 	_, port, err := net.SplitHostPort(proxyAddress)
-	if (err != nil) {
+	if err != nil {
 		logFatal("Can't extract proxy port from %s. Error: %s", proxyAddress, err.Error())
 	}
-
 
 	conf["goappProxyPort"] = port
 }
 
-
 func updateRelativePath(conf map[string]string) {
 	dirRoot := conf["dirRoot"]
 	dirStatic := dirRoot + "/rhood-www/static"
-//	dirStatic := "/home/venv/v1/www/flask/rhood_youtube/static/"
-
+	//	dirStatic := "/home/venv/v1/www/flask/rhood_youtube/static/"
 
 	conf["youtubeDownloader"] = dirRoot + "/data/youtube-dl/youtube-dl"
 	conf["dirStatic"] = dirStatic

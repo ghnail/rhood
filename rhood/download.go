@@ -65,10 +65,10 @@ func cancelCurrentDownload() {
 func downloadLoop() {
 	for {
 		select {
-		case url := <- newFilesToDownloadChan:
+		case url := <-newFilesToDownloadChan:
 			doDownloadActual(url)
 			break
-		case serviceRequest := <- serviceRequestChan:
+		case serviceRequest := <-serviceRequestChan:
 			doService(serviceRequest)
 		}
 	}
@@ -192,6 +192,7 @@ func doService(serviceRequest string) {
 		logErr("Unknown service request %s", serviceRequest)
 	}
 }
+
 //=============================================================================
 //						Download data from server
 //=============================================================================
@@ -373,7 +374,6 @@ func (execCommand *ExecCommand) execCommandWithCancel() {
 		execCommand.err = errors.New("process is cancelled")
 	}
 }
-
 
 func (execCommand *ExecCommand) execCommandWithCancelFromChan(cc chan string) {
 	// 1. Create process

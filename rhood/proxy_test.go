@@ -63,7 +63,6 @@ func TestProxyVideoFromLanPlayerReplace(t *testing.T) {
 	assert.Equal(t, expected, actual)
 }
 
-
 func TestProxyVideoFromLanPlayerReplaceWithHiding(t *testing.T) {
 	html := getProxyTestHtml()
 
@@ -105,7 +104,6 @@ func TestProxyVideoFromLanPlayerReplaceWithHiding(t *testing.T) {
 
 	assert.Equal(t, expected, actual)
 }
-
 
 func TestProxyVideoFromLanCacheButton(t *testing.T) {
 	html := getProxyTestHtml()

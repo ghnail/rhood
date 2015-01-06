@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/ghnail/rhood/rhood"
 	"fmt"
+	"github.com/ghnail/rhood/rhood"
 )
 
 func main() {

@@ -96,7 +96,7 @@ func downloadRequestActionGorillaRoute(w http.ResponseWriter, r *http.Request) {
 
 func execTemplate(w http.ResponseWriter, templateName string, params interface{}) {
 	// Development mode, do not restart server to reload template
-//	initTemplates()
+	//	initTemplates()
 
 	if err := globalTemplatesAll.ExecuteTemplate(w, templateName, params); err != nil {
 		logErr("Template error: " + err.Error())
@@ -243,7 +243,7 @@ func downloadActionGorillaRoute(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateYoutubeDlActionGorillaRoute(w http.ResponseWriter, r *http.Request) {
-	params := make(map[string] interface{})
+	params := make(map[string]interface{})
 	RequestUpdateYoutubeDl()
 	execTemplate(w, "update-youtube-dl.html", params)
 }

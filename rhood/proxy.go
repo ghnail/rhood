@@ -44,7 +44,7 @@ func getVideoTag(videoUrl string) string {
 // so it will be unable to play; but if another player is used,
 // it will be hidden and still playing/requesting external data.
 
-var isDisabledEntirePlayerDiv = false;
+var isDisabledEntirePlayerDiv = false
 
 func videoFromLan(html string, videoId string, cacheBoxHttpAddress string) string {
 	// 1. Replace video player tag
@@ -53,9 +53,9 @@ func videoFromLan(html string, videoId string, cacheBoxHttpAddress string) strin
 
 	videoTag := getVideoTag(mp4Url)
 
-	if (isDisabledEntirePlayerDiv) {
+	if isDisabledEntirePlayerDiv {
 		html = regexp.MustCompile(`(?s)<div id="player-mole-container.*<div class="clear"`).
-		ReplaceAllString(html, videoTag+`<div class="clear"`)
+			ReplaceAllString(html, videoTag+`<div class="clear"`)
 	} else {
 		// Can't simple remove #player-api, without it comments are not loaded.
 		// JS catches NPE, and doesn't reach comments part.
@@ -70,7 +70,6 @@ func videoFromLan(html string, videoId string, cacheBoxHttpAddress string) strin
 		html = regexp.MustCompile(`(<div id="player-api")([^>]*)(></div>)`).
 			ReplaceAllString(html, `$1$2 style="display:none"$3`)
 	}
-
 
 	// 2. Add scripts/styles to support player
 	playerHeader := `
@@ -261,7 +260,6 @@ func Proxy() {
 	globalproxy = proxy
 
 	logProxyApplicationParameters()
-
 
 	logFatal(http.ListenAndServe(goappProxyBindAddress, proxy).Error())
 }
