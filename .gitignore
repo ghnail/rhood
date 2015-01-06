@@ -1,7 +1,7 @@
 *.iml
 .idea
 .idea/**
-delivery-dirs
+
 docker-local
 rhood-www/static/cache/video/*.mp4
 rhood-www/static/cache/html/*.html
@@ -9,3 +9,8 @@ data/youtube-dl/*
 temp.txt
 
 cmd/rhood/rhood
+
+
+# Build result
+delivery/rhood
+delivery/rhood.zip
