@@ -80,8 +80,11 @@ func downloadLoop() {
 
 func getFormOfAvailableFormats(youtubeUrl string) map[string]map[string]string {
 	youtubeDownloader := GetConfVal("youtubeDownloader")
-
-	cmd := exec.Command(youtubeDownloader, "--no-playlist", "-F", youtubeUrl)
+	youtubeDownloaderDir := GetConfVal("youtubeDownloaderDir")
+	cmd := exec.Command(youtubeDownloader,
+		"--cache-dir", youtubeDownloaderDir,
+		"--no-playlist",
+		"-F", youtubeUrl)
 	execCmd := NewExecCommand(cmd)
 
 	execCmd.execCommandWithCancel()
@@ -199,9 +202,16 @@ func doService(serviceRequest string) {
 
 func getDownloaderCmd(url string, format string) *exec.Cmd {
 	youtubeDownloader := GetConfVal("youtubeDownloader")
+	youtubeDownloaderDir := GetConfVal("youtubeDownloaderDir")
 	dirStoreVideo := GetConfVal("dirStoreVideo")
 
-	cmd := exec.Command(youtubeDownloader, "--no-playlist", "--newline", "--id", "-f", format, url)
+
+
+	cmd := exec.Command(youtubeDownloader,
+		"--cache-dir", youtubeDownloaderDir,
+		"--no-playlist", "--newline",
+		"--id", "-f", format,
+		url)
 
 	cmd.Dir = dirStoreVideo
 

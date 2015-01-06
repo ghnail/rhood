@@ -143,6 +143,10 @@ func updateRelativePath(conf map[string]string) {
 	//	dirStatic := "/home/venv/v1/www/flask/rhood_youtube/static/"
 
 	conf["youtubeDownloader"] = dirRoot + "/data/youtube-dl/youtube-dl"
+	conf["youtubeDownloaderDir"] = filepath.Dir(conf["youtubeDownloader"])
+
+
+
 	conf["dirStatic"] = dirStatic
 
 	conf["dirStoreHtml"] = dirStatic + "/cache/html/"
