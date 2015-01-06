@@ -2,12 +2,7 @@ package rhood
 
 import (
 	"testing"
-	"fmt"
-//	"os"
-//	"net/http"
-//	"io"
 	"io/ioutil"
-//	"os"
 	"os"
 	"time"
 	"strings"
@@ -27,6 +22,7 @@ func TestCopyWithProgress(t *testing.T) {
 
 	go func() {
 		for c := range ch {
+//			println(c)
 			if strings.Contains(c, "100.00%") || strings.HasPrefix(c, "Error:"){
 
 				break
@@ -79,14 +75,29 @@ func TestFileHash(t *testing.T) {
 }
 
 func TestFirst(t *testing.T) {
-	fmt.Println("Hello")
+//	t.Skip("Test requires Internet connection")
+//	ch := make(chan string,1000)
+	ch := make(chan string)
 
-//	downloadFileWithProgressBar()
-	binFile := "/home/z/gocode/src/github.com/ghnail/rhood/data/youtube-dl/youtube-dl"
-	downloadYoutubeDl(binFile, nil);
-//	downloadYoutubeDLIfRequired(binFile);
-	fmt.Println("Download is finished")
-//	updateYoutubeDl(binFile)
-	fmt.Println("Test is finished")
+	file, _ := ioutil.TempFile(".", "test-youtube-dl")
+	file.Close()
+	tmpName := file.Name()
+
+
+	defer func() {
+		file.Close()
+		os.Remove(tmpName)
+	}()
+
+
+	err := downloadYoutubeDl(tmpName, ch);
+
+	assert.Nil(t, err)
+
+	stat, _ := os.Stat(tmpName)
+
+	// Or use hash value
+	assert.Equal(t, 723782, stat.Size())
+
 
 }
