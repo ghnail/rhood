@@ -123,6 +123,10 @@ go version
 must output something like:
 > go version go1.3 linux/amd64
 
+
+> The new go1.4 version is working too; however, the used Ansible role is based on go1.3,
+> so it's simpler to take this version.
+
 ## 4.2. VCS
 
 The go code requires git for the most of projects, but it's also good to see mercurial
