@@ -10,28 +10,27 @@ When you press it, the new dialog will appear to select video quality.
 
 ![Download options](https://raw.githubusercontent.com/ghnail/rhood/master/doc/img/download-options.png)
 
-And the next time you visit video page, you will get media traffic from the local server:
+And the next time you visit video page, you will get media traffic from the local server;
+on the screenshot you can see green text "Video is cached" and the changed video player.
 
 ![Cached video](https://raw.githubusercontent.com/ghnail/rhood/master/doc/img/cached-video.png)
-
-The video player is changed, and we see a green text: "Video is cached".
 
 # 2. How it works
 
 Sometimes (hello, slow networks!) it may be nice to work with a regular youtube
-interface (http address, user comments, playlists, recommendations), but with a
-video downloaded from the LAN server.
+interface (address http://youtube.com/watch?videoId, user comments, playlists, recommendations), but with a
+video loaded from a LAN server.
 
-The first idea: cache the media data on Squid. But it doesn't work.
+The first idea: cache the media data on **Squid**. But it **doesn't work**.
 Youtube has complicated player, which works with a lot of video chunks instead of single video file.
-And each of them can have dynamic name for the same content, so Squid can't handle them.
+And each of them can have dynamic name for the same content, so Squid can't handle that situation.
 
-But there is a program, youtube-dl, which can download Youtube video to local file.
+But there is a program, **youtube-dl**, which can download Youtube video to a local file.
 Now it can be played with any offline media player, like VLC or mplayer.
 We can also save it on server, and feed browser with it.
 
-Original Youtube player can't request LAN server, so we need to replace
-it with another software, in this app it is VideoJS.
+Original **Youtube player** can't request LAN server, so **we need to replace
+it with** another software, in this app it is **VideoJS**.
 
 The main disadvantage is that we have lost annotations and subtitles,
 but for the most of videos it's not that huge loss.
@@ -52,9 +51,11 @@ sudo apt-get install python
 
 
 Then you can download the latest *.zip file from the Releases tab
-(for example, https://github.com/ghnail/rhood/releases/tag/0.02 ),
+(for example, https://github.com/ghnail/rhood/releases/download/0.030/rhood.zip ),
 unzip it and launch `./run.sh` script. Be careful, you must be in
 the rhood root directory; the script is not path-independent for now.
+
+### 3.1.1. Testing
 
 Visit http://localhost:8090 to see, if the page is opened.
 If it's OK, you can visit some video: http://localhost:8090/youtube/watch?v=UU5wFUqoBbk
@@ -74,23 +75,27 @@ sudo apt-get install docker-io
 
 Now pull the app image
 ```bash
-docker pull ghnail/rhood_proxy
+docker pull ghnail/rhood
 ```
 
 Prepare the directory to store the video files
 
 ```bash
-mkdir -p /var/rhood_proxy/cache
+mkdir -p /var/rhood
+mkdir -p /var/rhood/html
+mkdir -p /var/rhood/video
 ```
 
 And launch the container
 
 ```bash
-docker run -it -p 8090:8090 -p 8081:8081 -v /var/rhood_proxy/cache:/data/rhood/cache ghnail/rhood_proxy
+docker run -it -p 8090:8090 -p 8081:8081 -v /var/rhood:/data/rhood/cache ghnail/rhood
 ```
+
+
 The proxy port is 8081, the web interface address is localhost:8090.
 
-You can perform actions from section 3.1 to test it.
+You can perform actions from section 3.1.1 to test it.
 
 # 4. How to build
 
@@ -104,6 +109,7 @@ You need a number of software tools:
 and if you want to set up a separate box with a proxy:
 - lxc
 - ansible
+
 
 ## 4.1. Golang
 
@@ -135,30 +141,24 @@ will say something like that:
 
 ## 4.3. Youtube-dl
 
-The best way is to use virtualenv+pip.
+It will be downloaded on the first run of the app, but you can download
+it manually and place to the data/youtube-dl/youtube-dl
 
-sudo apt-get install python-virtualenv
-sudo apt-get install python-pip
+However, you still need the Python to run it, so make sure you have
+installed it.
 
-Make shure you are able to write directory `/home/venv/rhood` and run command
 ```bash
-virtualenv /home/venv/rhood
-```
-
-And now install youtube_dl from this environment
-```bash
-source /home/venv/rhood/bin/activate
-pip install -I youtube_dl==2014.09.04.3
+sudo apt-get install python python2.7
 ```
 
 The request
 ```bash
-/home/venv/rhood/bin/youtube-dl --version
+python -V
 ```
 
 must result something like that:
 
-> 2014.09.04.3
+> Python 2.7.4
 
 ## 4.4. Build the app
 Download the project
@@ -166,21 +166,18 @@ Download the project
 ```bash
 go get github.com/ghnail/rhood
 ```
-With dependencies: go to the project dir (for example, /home/user/gocode/src/github.com/ghnail/rhood )
-and run `go get ./...`
+On the first run you can use script build.sh.
+For example, if your project dir is /home/user/gocode/src/github.com/ghnail/rhood
 
 ```bash
 cd /home/user/gocode/src/github.com/ghnail/rhood
-go get ./...
+./build.sh
 ```
 
-And, finally, build and run the project:
-```bash
-cd cmd/rhood
-go build
+It will download the dependencies and, obviously, build the app.
 
-./rhood
-```
+The binary will be located at the /home/user/gocode/src/github.com/ghnail/rhood/cmd/rhood/rhood .
+It can be launched directly, or via script run.sh.
 
 You can also run auto tests:
 ```bash
@@ -190,6 +187,10 @@ go test -v
 ```
 
 ## 4.5. Test the app
+
+> Actually, the same section as 3.1.1, just changed port from 8090 to 2000
+> in the development version.
+
 
 Open admin page
 
@@ -205,7 +206,7 @@ http://www.youtube.com/watch?v=UU5wFUqoBbk
 
 ## 4.6. Ansible delivery
 
-You may want to deploy application on the separate box. You can build application,
+You may want to deploy a service on a separate box. You can build the app,
 copy binary, templates and web static files to the box, and configure Nginx
 by yourself. But it can be done automatically with Ansible scripting.
 
@@ -269,7 +270,7 @@ You can use proxy in two versions: nginx-optimized proxy with port 85, or use th
 
 # 5. IDE setup
 
-The Intellij IDEA has a good unofficial plugin for the Go language, and it has a nice quality.
+The Intellij IDEA has a good unofficial plugin for the Go language, and it is really nice.
 
 # 6. Brief structure description
 
@@ -280,7 +281,7 @@ The main application parts are:
 - html templates (they are in the separate dir, and not embedded in the app)
 - satic files (js, css, videojs, jquery) and downloaded html pages/video files
 
-For production there are few additional things:
+For 'ansible-production' there are few additional things:
 
 - upstart script to launch/log app as daemon
 - nginx as second proxy to serve static files
@@ -288,19 +289,29 @@ For production there are few additional things:
 
 Directory structure:
 
+Code.
+
 - cmd/rhood/rhood - code to launch the app, 'main' function
 - rhood - most of the golang code of the app
+
+Data for the backend.
+
 - data/ansible - ansible scripts how to build and deploy app on external server
 - data/conf - all config files for the app
 - data/conf/examples - examples of conf templates with substituted values
 - data/templates - html templates
+- data/youtube-dl - where youtube-dl script is located (and downloaded/updated)
+
+Front-end
+
 - www-rhood - all front-end, and saved html pages/video files
+
+
 
 Ansible-target box, the build and deploy separate server:
 
 - /home/ubuntu - home dir
 - /home/ubuntu/gocode - go root
-- /home/ubuntu/virtualenv - venv for the youtube_dl
 - /home/ubuntu/rhood - dir of the deployed app
 - /etc/nginx/nginx.conf - nginx
 - /etc/init/drhood.conf - upstart daemon config
