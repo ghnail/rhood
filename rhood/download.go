@@ -385,43 +385,6 @@ func (execCommand *ExecCommand) execCommandWithCancel() {
 	}
 }
 
-func (execCommand *ExecCommand) execCommandWithCancelFromChan(cc chan string) {
-	// 1. Create process
-	cmd := execCommand.cmd
-
-	finished := executeAsync(cmd, execCommand.sendToWebUI)
-
-	select {
-	case res := <-finished:
-		err := res["error"]
-		stdout := res["stdout"]
-		stderr := res["stderr"]
-
-		if err == "" {
-			logDebug("Process is finished correctly")
-		} else {
-			logErr("Process has failed. Error: %s", err)
-		}
-
-		execCommand.err = errors.New(err)
-		execCommand.totalStdout = stdout
-		execCommand.totalStderr = stderr
-
-	case <-cc:
-		execCommand.isCancelled = true
-		err := cmd.Process.Kill()
-		if err == nil {
-			logDebug("Process is cancelled")
-		} else {
-			logErr("Error cancelling process")
-		}
-
-		execCommand.totalStdout = ""
-		execCommand.totalStderr = ""
-		execCommand.err = errors.New("process is cancelled")
-	}
-}
-
 //-----------------------------------------------------------------------------
 //								Common methods
 
